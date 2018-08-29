@@ -23,7 +23,7 @@ contract Auction is Mortal {
 		highestBidder = msg.sender; 
 	}
 
-    function withdraw() public payable {
+    function withdraw(address beneficiary) public payable {
         //check
         require( moneyback[msg.sender] > 0 );
         
@@ -32,16 +32,16 @@ contract Auction is Mortal {
         moneyback[msg.sender] = 0;
         
         //interact
-        msg.sender.transfer( amount );
+        beneficiary.transfer( amount );
     }	
     
     function open() public onlyOwner {
         isOpen = true;
     }
     
-	function close() public payable onlyOwner ifOpen { 
+	function close(address beneficiary) public payable onlyOwner ifOpen { 
 	    isOpen=false; 
-	    msg.sender.transfer( highestBid );
+	    beneficiary.transfer( highestBid );
 	}
 	
 	function winner() public view returns (address) { 
