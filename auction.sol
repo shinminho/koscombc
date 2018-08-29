@@ -1,18 +1,18 @@
 pragma solidity ^0.4.24;
 
-contract AuctionV2 {
+import "./Mortal.sol";
 
-	address seller;
+// This contract is used for BazaarAuction application
+// Slight changes are made to AuctionV2 contract
+contract Auction is Mortal {
+
 	uint public highestBid = 0;
 	address public highestBidder;
-	bool open = true;
-
+	bool isOpen = true;
+    
     mapping (address=>uint) moneyback;
     
-	modifier ifOpen { require( open ); _; }
-	modifier onlySeller { require( msg.sender == seller ); _; }
-
-	constructor() public { seller = msg.sender; }
+	modifier ifOpen { require( isOpen ); _; }
 
 	function bid() public payable ifOpen {
 	    require( msg.value > highestBid );
@@ -23,14 +23,7 @@ contract AuctionV2 {
 		highestBidder = msg.sender; 
 	}
 
-    function withdrawUnsafe() public {
-        if( moneyback[msg.sender] > 0 ) {
-            msg.sender.transfer( moneyback[msg.sender] );
-            moneyback[msg.sender] = 0;
-        }
-    }	
-    
-    function withdrawSafe() public payable {
+    function withdraw() public payable {
         //check
         require( moneyback[msg.sender] > 0 );
         
@@ -40,11 +33,18 @@ contract AuctionV2 {
         
         //interact
         msg.sender.transfer( amount );
-        //msg.sender.call.gas(10000000).value( amount );
     }	
     
-	function close() public payable onlySeller ifOpen { 
-	    open=false; 
+    function open() public onlyOwner {
+        isOpen = true;
+    }
+    
+	function close() public payable onlyOwner ifOpen { 
+	    isOpen=false; 
 	    msg.sender.transfer( highestBid );
+	}
+	
+	function winner() public view returns (address) { 
+	    return highestBidder; 
 	}
 }
