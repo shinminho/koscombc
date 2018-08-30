@@ -1,17 +1,19 @@
 pragma solidity ^0.4.24;
 
 import "./Mortal.sol";
+import "./Auction.sol";
+
 //import "./Bazaar.sol";
 
 interface Bazaar {
     function register() external returns (address[]);
 }
 
-interface Auction {
-    function bid() external;
-    function withdraw( address ) external;
-    function winner() external view returns (address); 
-}
+//interface Auction {
+ //   function bid() external;
+  //  function withdraw( address ) external;
+//    function winner() external view returns (address); 
+//}
 
 contract Bidder is Mortal {
     
@@ -26,9 +28,13 @@ contract Bidder is Mortal {
         //address[] storage items = bazaar.call("register");
     } 
     
-    function bid(uint index, uint amount) public {
-       //Auction(items[index]).bid();
-       if(!items[index].call.value(amount)("bid()"))
+    function () public payable { }
+    
+    function bid(uint index, uint amount) public payable {
+       //Auction(items[index]).bid.value(amount)();
+       if(!items[index].call.value(amount)
+            (bytes4(keccak256("bid()")))
+        )
            revert("calling bid() of Auction failed");
     }
 
