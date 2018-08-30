@@ -2,6 +2,7 @@ pragma solidity ^0.4.24;
 
 interface token {
     function transfer(address, uint) external;
+    function transferFrom(address, address, uint) external;
 }
 
 contract Crowdfunding {
@@ -39,7 +40,7 @@ constructor(
         balanceOf[msg.sender] += amount;
         amountRaised += amount;
         
-        tokenReward.transfer(msg.sender, amount / price);
+        tokenReward.transferFrom( beneficiary, msg.sender, amount / price);
         
         emit fundRaised(msg.sender, amount);
     }
