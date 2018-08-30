@@ -2,6 +2,7 @@
 Welcome to Koscom Blockchain Lecture 
 
 Example Dapp lists
+
 https://www.stateofthedapps.com/
 
 https://dappradar.com/
