@@ -10,12 +10,14 @@ interface Bazaar {
 interface Auction {
     function bid() external;
     function withdraw( address ) external;
+    function winner() external view returns (address); 
 }
 
 contract Bidder is Mortal {
     
-    address bazaar;
-    address[] items;
+    address public bazaar;
+    address[] public items;
+    address[] public winners;
     
     constructor(address bazaar_) public {
        bazaar = bazaar_;
@@ -31,7 +33,9 @@ contract Bidder is Mortal {
     }
 
     function result() public {
-        
+        for( uint i=0; i<items.length; i++ ) {
+            winners.push(Auction(items[i]).winner());
+        }
     }
     
     function withdraw() public {
